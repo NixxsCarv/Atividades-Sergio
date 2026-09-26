@@ -10,14 +10,14 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
+@Entity
 @Setter
 public class Produto {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     private String nome;
 
     private String descricao;
