@@ -1,0 +1,42 @@
+erDiagram
+    ESTUDANTES }o--o{ DISCIPLINAS : estudam
+    ESTUDANTES ||--o{ DISPONIBILIDADES : possuem
+    ESTUDANTES ||--o{ GRUPOS_ESTUDO : administram
+    DISCIPLINAS ||--o{ GRUPOS_ESTUDO : organizam
+    GRUPOS_ESTUDO ||--o{ SOLICITACOES_ENTRADA : recebem
+    ESTUDANTES ||--o{ SOLICITACOES_ENTRADA : solicitam
+    GRUPOS_ESTUDO ||--o{ PARTICIPACOES : possuem
+    ESTUDANTES ||--o{ PARTICIPACOES : integram
+    GRUPOS_ESTUDO ||--o{ ENCONTROS : agendam
+    ESTUDANTES { bigint id PK
+       string nome
+       string email UK
+       string objetivo }
+    DISCIPLINAS { bigint id PK
+       string nome UK }
+    DISPONIBILIDADES { bigint id PK
+       bigint estudante_id FK
+       string dia_semana
+       time hora_inicio
+       time hora_fim }
+    GRUPOS_ESTUDO { bigint id PK
+       bigint disciplina_id FK
+       bigint administrador_id FK
+       string nome
+       string descricao
+       string dia_semana
+       time hora_inicio
+       time hora_fim
+       int capacidade }
+    SOLICITACOES_ENTRADA { bigint id PK
+       bigint estudante_id FK
+       bigint grupo_id FK
+       string status }
+    PARTICIPACOES { bigint id PK
+       bigint estudante_id FK
+       bigint grupo_id FK }
+    ENCONTROS { bigint id PK
+       bigint grupo_id FK
+       datetime inicio
+       datetime fim
+       string local_descricao }

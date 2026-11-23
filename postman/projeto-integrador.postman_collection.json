@@ -1,0 +1,1252 @@
+{
+  "info": {
+    "name": "StudyMatch - PI - API REST",
+    "description": "Requisições de teste do projeto. EXECUTAR no Postman e salvar respostas reais com Save Response antes de entregar. A ordem do fluxo assume BD vazio.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{adminUser}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{adminPass}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "adminUser",
+      "value": "admin@studymatch.test",
+      "type": "string"
+    },
+    {
+      "key": "adminPass",
+      "value": "Admin@1234",
+      "type": "string"
+    },
+    {
+      "key": "alunoUser",
+      "value": "aluno@studymatch.test",
+      "type": "string"
+    },
+    {
+      "key": "alunoPass",
+      "value": "Aluno@1234",
+      "type": "string"
+    },
+    {
+      "key": "disciplinaId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "estudanteId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "alunoEstudanteId",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "disponibilidadeId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "grupoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "solicitacaoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "participacaoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "encontroId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Fluxo - Preparação e compatibilidade",
+      "item": [
+        {
+          "name": "01 - Criar matéria Matemática",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Matemática\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Executar primeiro em banco vazio; guarde ID em disciplinaId"
+          }
+        },
+        {
+          "name": "02 - Criar estudante Ana (administradora)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Ana Silva\",\"email\":\"admin@studymatch.test\",\"objetivo\":\"Vestibular\",\"disciplinaIds\":[{{disciplinaId}}]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Guarde ID em estudanteId"
+          }
+        },
+        {
+          "name": "03 - Criar estudante Bruno",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Bruno Costa\",\"email\":\"aluno@studymatch.test\",\"objetivo\":\"Concurso\",\"disciplinaIds\":[{{disciplinaId}}]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Guarde ID em alunoEstudanteId"
+          }
+        },
+        {
+          "name": "04 - Disponibilidade Ana",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"18:00\",\"horaFim\":\"21:00\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "05 - Disponibilidade Bruno",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"18:00\",\"horaFim\":\"21:00\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "06 - Criar grupo (com vaga)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Grupo Matemática\",\"descricao\":\"Exercícios semanais\",\"disciplinaId\":{{disciplinaId}},\"administradorId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"19:00\",\"horaFim\":\"20:00\",\"capacidade\":2}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Guarde ID em grupoId"
+          }
+        },
+        {
+          "name": "07 - Consulta personalizada - grupos de Matemática na segunda",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos?disciplinaId={{disciplinaId}}&diaSemana=SEGUNDA"
+          }
+        },
+        {
+          "name": "08 - Consulta personalizada - disponibilidade de Bruno",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades?estudanteId={{alunoEstudanteId}}"
+          }
+        },
+        {
+          "name": "09 - Encontrar grupos compatíveis com Bruno",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos/compativeis?estudanteId={{alunoEstudanteId}}",
+            "description": "Funcionalidade específica, esperado HTTP 200 com grupo correspondente"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fluxo - Solicitação, aprovação e encontros",
+      "item": [
+        {
+          "name": "01 - Bruno solicita entrada (ALUNO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{alunoUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{alunoPass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Esperado 201 PENDENTE; anote o ID em solicitacaoId"
+          }
+        },
+        {
+          "name": "02 - Listar solicitações pendentes (consulta personalizada)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes?status=PENDENTE"
+          }
+        },
+        {
+          "name": "03 - Aprovar solicitação (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}/aprovar",
+            "description": "Esperado 200 APROVADA; cria participação automaticamente"
+          }
+        },
+        {
+          "name": "04 - Listar membros do grupo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes?grupoId={{grupoId}}",
+            "description": "Esperado 200, contendo Bruno"
+          }
+        },
+        {
+          "name": "05 - Criar encontro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"grupoId\":{{grupoId}},\"inicio\":\"2026-11-30T19:00:00\",\"fim\":\"2026-11-30T20:00:00\",\"localDescricao\":\"Biblioteca central\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado 201, em segunda-feira dentro do horário do grupo"
+          }
+        },
+        {
+          "name": "06 - Listar calendário dos encontros",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros?grupoId={{grupoId}}"
+          }
+        },
+        {
+          "name": "07 - Rejeitar solicitação (use outra pendente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}/rejeitar",
+            "description": "Caso solicitação já aprovada: esperado 409. Para demonstrar rejeição, crie outra solicitação pendente."
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Disciplinas",
+      "item": [
+        {
+          "name": "01 - Listar Disciplinas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Matemática\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção disciplinaId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas/{{disciplinaId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas/{{disciplinaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Matemática Avançada\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas/{{disciplinaId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Estudantes",
+      "item": [
+        {
+          "name": "01 - Listar Estudantes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Ana Silva\",\"email\":\"admin@studymatch.test\",\"objetivo\":\"Vestibular\",\"disciplinaIds\":[{{disciplinaId}}]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção estudanteId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes/{{estudanteId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes/{{estudanteId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Ana Silva Atualizada\",\"email\":\"admin@studymatch.test\",\"objetivo\":\"Revisar conteúdos\",\"disciplinaIds\":[{{disciplinaId}}]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/estudantes/{{estudanteId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Disponibilidades",
+      "item": [
+        {
+          "name": "01 - Listar Disponibilidades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"18:00\",\"horaFim\":\"21:00\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção disponibilidadeId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades/{{disponibilidadeId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades/{{disponibilidadeId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"17:00\",\"horaFim\":\"21:00\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades/{{disponibilidadeId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Grupos",
+      "item": [
+        {
+          "name": "01 - Listar Grupos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Grupo Matemática\",\"descricao\":\"Exercícios semanais\",\"disciplinaId\":{{disciplinaId}},\"administradorId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"19:00\",\"horaFim\":\"20:00\",\"capacidade\":2}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção grupoId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos/{{grupoId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos/{{grupoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Grupo Matemática Atualizado\",\"descricao\":\"Lista de exercícios\",\"disciplinaId\":{{disciplinaId}},\"administradorId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"19:00\",\"horaFim\":\"20:00\",\"capacidade\":3}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/grupos/{{grupoId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Solicitações",
+      "item": [
+        {
+          "name": "01 - Listar Solicitações",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção solicitacaoId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Participações",
+      "item": [
+        {
+          "name": "01 - Listar Participações",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção participacaoId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes/{{participacaoId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes/{{participacaoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/participacoes/{{participacaoId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD - Encontros",
+      "item": [
+        {
+          "name": "01 - Listar Encontros",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "02 - Criar registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"grupoId\":{{grupoId}},\"inicio\":\"2026-11-30T19:00:00\",\"fim\":\"2026-11-30T20:00:00\",\"localDescricao\":\"Biblioteca central\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 201; copie o ID retornado para a variável de coleção encontroId"
+          }
+        },
+        {
+          "name": "03 - Consultar pelo ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros/{{encontroId}}",
+            "description": "Esperado HTTP 200"
+          }
+        },
+        {
+          "name": "04 - Atualizar registro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros/{{encontroId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"grupoId\":{{grupoId}},\"inicio\":\"2026-12-07T19:00:00\",\"fim\":\"2026-12-07T20:00:00\",\"localDescricao\":\"Sala 101\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado HTTP 200; execute sem vínculos que impeçam alterações"
+          }
+        },
+        {
+          "name": "05 - Excluir registro",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros/{{encontroId}}",
+            "description": "Esperado HTTP 204 apenas se não houver dependências; se houver, esperado 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erros HTTP / regras de negócio",
+      "item": [
+        {
+          "name": "400 - Validação Bean Validation (@NotBlank)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado 400 Bad Request"
+          }
+        },
+        {
+          "name": "400 - Horário inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disponibilidades",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{estudanteId}},\"diaSemana\":\"SEGUNDA\",\"horaInicio\":\"21:00\",\"horaFim\":\"18:00\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado 400 Bad Request"
+          }
+        },
+        {
+          "name": "404 - Recurso inexistente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas/999999",
+            "description": "Esperado 404 Not Found"
+          }
+        },
+        {
+          "name": "409 - Solicitação duplicada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estudanteId\":{{alunoEstudanteId}},\"grupoId\":{{grupoId}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{alunoUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{alunoPass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Esperado 409, após registrar uma solicitação"
+          }
+        },
+        {
+          "name": "409 - Aprovação repetida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/solicitacoes/{{solicitacaoId}}/aprovar",
+            "description": "Esperado 409 se já aprovada"
+          }
+        },
+        {
+          "name": "409 - Encontro sobreposto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encontros",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"grupoId\":{{grupoId}},\"inicio\":\"2026-11-30T19:00:00\",\"fim\":\"2026-11-30T20:00:00\",\"localDescricao\":\"Biblioteca central\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Esperado 409 se já existir um encontro no mesmo período"
+          }
+        },
+        {
+          "name": "401 - Sem autenticação",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Esperado 401 Unauthorized"
+          }
+        },
+        {
+          "name": "403 - ALUNO não pode criar disciplina",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/disciplinas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Física\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{alunoUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{alunoPass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Esperado 403 Forbidden"
+          }
+        }
+      ]
+    }
+  ]
+}

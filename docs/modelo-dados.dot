@@ -1,0 +1,20 @@
+digraph ER {
+ graph [rankdir=LR, nodesep=0.5, ranksep=0.8, bgcolor="white", splines=polyline];
+ node [shape=record, fontname="DejaVu Sans", fontsize=10, style="filled", fillcolor="#eaf3fc", color="#47769b"];
+ Estudante [label="{Estudante|id (PK)\lnome\lemail\lobjetivo\l}"];
+ Disciplina [label="{Disciplina|id (PK)\lnome\l}"];
+ Disponibilidade [label="{Disponibilidade|id (PK)\lestudante_id (FK)\ldiaSemana\lhoraInicio\lhoraFim\l}"];
+ Grupo [label="{GrupoEstudo|id (PK)\ldisciplina_id (FK)\ladministrador_id (FK)\lcapacidade\ldia/horas\l}"];
+ Solicitacao [label="{SolicitacaoEntrada|id (PK)\lgrupo_id (FK)\lestudante_id (FK)\lstatus\l}"];
+ Participacao [label="{Participacao|id (PK)\lgrupo_id (FK)\lestudante_id (FK)\l}"];
+ Encontro [label="{Encontro|id (PK)\lgrupo_id (FK)\linicio/fim\l}"];
+ Estudante -> Disciplina [label="N:M", dir=both];
+ Estudante -> Disponibilidade [label="1:N"];
+ Estudante -> Grupo [label="admin 1:N"];
+ Disciplina -> Grupo [label="1:N"];
+ Grupo -> Solicitacao [label="1:N"];
+ Estudante -> Solicitacao [label="1:N"];
+ Grupo -> Participacao [label="1:N"];
+ Estudante -> Participacao [label="1:N"];
+ Grupo -> Encontro [label="1:N"];
+}
